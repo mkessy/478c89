@@ -8,23 +8,19 @@ const Messages = (props) => {
 
   return (
     <Box>
-      {messages
-        .slice()
-        .reverse()
-        .map((message) => {
-          const time = moment(message.createdAt).format("h:mm");
-
-          return message.senderId === userId ? (
-            <SenderBubble key={message.id} text={message.text} time={time} />
-          ) : (
-            <OtherUserBubble
-              key={message.id}
-              text={message.text}
-              time={time}
-              otherUser={otherUser}
-            />
-          );
-        })}
+      {messages.map((message) => {
+        const time = moment(message.createdAt).format("h:mm");
+        return message.senderId === userId ? (
+          <SenderBubble key={message.id} text={message.text} time={time} />
+        ) : (
+          <OtherUserBubble
+            key={message.id}
+            text={message.text}
+            time={time}
+            otherUser={otherUser}
+          />
+        );
+      })}
     </Box>
   );
 };
