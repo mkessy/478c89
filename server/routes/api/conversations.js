@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const { User, Conversation, Message } = require("../../db/models");
+const { User, Conversation, Message, LastActive } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
+const { activityArrayToMap } = require("./helpers");
 
 // get all conversations for a user, include latest message text for preview, and all messages
 // include other user model so we have info on username/profile pic (don't include current user info)
@@ -47,6 +48,8 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
+    const userActivity = await LastActive.findAll({ where: { userId } });
+    const userActivityMap = activityArrayToMap(userActivity);
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
@@ -68,11 +71,36 @@ router.get("/", async (req, res, next) => {
       }
 
       // set properties for notification count and latest message preview
-      convoJSON.latestMessageText = convoJSON.messages[0].text;
+      const { text, createdAt } = convoJSON.messages[0];
+      convoJSON.latestMessageText = text;
+
       conversations[i] = convoJSON;
     }
 
-    res.json(conversations);
+    const conversationsWithNotification = conversations.map((convo) => {
+      let unreadMessages;
+      if (userActivityMap[convo.id]) {
+        unreadMessages = convo.messages.filter(
+          (m) =>
+            new Date(m.createdAt) > new Date(userActivityMap[convo.id]) &&
+            m.senderId !== userId
+        ).length;
+        return {
+          ...convo,
+          unreadMessages,
+        };
+      } else {
+        unreadMessages = convo.messages.filter(
+          (m) => m.senderId !== userId
+        ).length;
+        return {
+          ...convo,
+          unreadMessages,
+        };
+      }
+    });
+
+    res.json(conversationsWithNotification);
   } catch (error) {
     next(error);
   }
