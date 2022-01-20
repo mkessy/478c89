@@ -49,7 +49,6 @@ router.get("/", async (req, res, next) => {
     });
 
     const userActivity = await LastActive.findAll({ where: { userId } });
-    const userActivityMap = activityArrayToMap(userActivity);
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
@@ -76,7 +75,8 @@ router.get("/", async (req, res, next) => {
 
       conversations[i] = convoJSON;
     }
-    res.json(conversationsWithNotification);
+
+    res.json(conversations);
   } catch (error) {
     next(error);
   }
