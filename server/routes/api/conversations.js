@@ -71,35 +71,11 @@ router.get("/", async (req, res, next) => {
       }
 
       // set properties for notification count and latest message preview
-      const { text, createdAt } = convoJSON.messages[0];
+      const { text } = convoJSON.messages[0];
       convoJSON.latestMessageText = text;
 
       conversations[i] = convoJSON;
     }
-
-    const conversationsWithNotification = conversations.map((convo) => {
-      let unreadMessages;
-      if (userActivityMap[convo.id]) {
-        unreadMessages = convo.messages.filter(
-          (m) =>
-            new Date(m.createdAt) > new Date(userActivityMap[convo.id]) &&
-            m.senderId !== userId
-        ).length;
-        return {
-          ...convo,
-          unreadMessages,
-        };
-      } else {
-        unreadMessages = convo.messages.filter(
-          (m) => m.senderId !== userId
-        ).length;
-        return {
-          ...convo,
-          unreadMessages,
-        };
-      }
-    });
-
     res.json(conversationsWithNotification);
   } catch (error) {
     next(error);
