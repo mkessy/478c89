@@ -3,7 +3,6 @@ import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { Search, Chat, CurrentUser } from "./index.js";
-import { countUnreadMessages } from "../../helpers.js";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,7 +22,7 @@ const useStyles = makeStyles(() => ({
 const Sidebar = (props) => {
   const classes = useStyles();
   const conversations = props.conversations || [];
-  const { handleChange, searchTerm, user, activeConversation } = props;
+  const { handleChange, searchTerm } = props;
 
   return (
     <Box className={classes.root}>
@@ -37,12 +36,6 @@ const Sidebar = (props) => {
         .map((conversation) => {
           return (
             <Chat
-              // TODO
-              unreadMessages={
-                activeConversation === conversation.otherUser.username
-                  ? null
-                  : countUnreadMessages(user, conversation)
-              }
               conversation={conversation}
               key={conversation.otherUser.username}
             />

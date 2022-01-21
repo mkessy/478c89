@@ -7,7 +7,7 @@ import {
   setSearchedUsers,
   clearUnreadMessagesAction,
 } from "../conversations";
-import { gotUser, setFetchingStatus, setLastActivity } from "../user";
+import { gotUser, setFetchingStatus } from "../user";
 
 axios.interceptors.request.use(async function (config) {
   const token = await localStorage.getItem("messenger-token");
@@ -63,29 +63,6 @@ export const logout = (id) => async (dispatch) => {
     await localStorage.removeItem("messenger-token");
     dispatch(gotUser({}));
     socket.emit("logout", id);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const fetchUserActivity = () => async (dispatch) => {
-  try {
-    const { data } = await axios.get("/api/activity");
-    console.log("fetched user activity");
-    console.log(data);
-    dispatch(setLastActivity(data));
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const updateUserActivity = (body) => async (dispatch) => {
-  try {
-    console.log(body);
-    const { data } = await axios.post("/api/activity/update", {
-      convoId: body,
-    });
-    dispatch(setLastActivity(data));
   } catch (error) {
     console.error(error);
   }

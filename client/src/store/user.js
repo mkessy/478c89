@@ -2,15 +2,8 @@
 
 const GET_USER = "GET_USER";
 const SET_FETCHING_STATUS = "SET_FETCHING_STATUS";
-const SET_LAST_ACTIVITY = "SET_LAST_ACTIVITY";
 
 // ACTION CREATORS
-export const setLastActivity = (activity) => {
-  return {
-    type: SET_LAST_ACTIVITY,
-    activity,
-  };
-};
 
 export const gotUser = (user) => {
   return {
@@ -34,11 +27,6 @@ const reducer = (state = { isFetching: true }, action) => {
       return {
         ...state,
         isFetching: action.isFetching,
-      };
-    case SET_LAST_ACTIVITY:
-      return {
-        ...state,
-        activity: action.activity,
       };
     default:
       return state;

@@ -5,11 +5,7 @@ import { Grid, CssBaseline, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { SidebarContainer } from "./Sidebar";
 import { ActiveChat } from "./ActiveChat";
-import {
-  logout,
-  fetchUserActivity,
-  fetchConversations,
-} from "../store/utils/thunkCreators";
+import { logout, fetchConversations } from "../store/utils/thunkCreators";
 import { clearOnLogout } from "../store/index";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = (props) => {
   const classes = useStyles();
-  const { user, logout, fetchConversations, fetchUserActivity } = props;
+  const { user, logout, fetchConversations } = props;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -32,10 +28,6 @@ const Home = (props) => {
   useEffect(() => {
     fetchConversations();
   }, [fetchConversations]);
-
-  useEffect(() => {
-    fetchUserActivity();
-  }, [fetchUserActivity]);
 
   if (!user.id) {
     // If we were previously logged in, redirect to login instead of register
@@ -77,10 +69,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetchConversations: () => {
       dispatch(fetchConversations());
-    },
-
-    fetchUserActivity: () => {
-      dispatch(fetchUserActivity());
     },
   };
 };
