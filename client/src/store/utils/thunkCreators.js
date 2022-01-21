@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  clearUnreadMessagesAction,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -107,6 +108,17 @@ export const postMessage = (body) => async (dispatch) => {
     }
 
     sendMessage(data, body);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// expects convoId in body
+export const setMessagesAsRead = (convoId) => async (dispatch) => {
+  try {
+    await axios.post("/api/messages/update", { convoId });
+
+    dispatch(clearUnreadMessagesAction(convoId));
   } catch (error) {
     console.error(error);
   }
