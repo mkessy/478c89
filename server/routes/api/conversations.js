@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const { User, Conversation, Message } = require("../../db/models");
+const { User, Conversation, Message, LastActive } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
+const { activityArrayToMap } = require("./helpers");
 
 // get all conversations for a user, include latest message text for preview, and all messages
 // include other user model so we have info on username/profile pic (don't include current user info)
@@ -47,6 +48,7 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
+    const userActivity = await LastActive.findAll({ where: { userId } });
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
