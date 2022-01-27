@@ -10,6 +10,7 @@ router.get("/", async (req, res, next) => {
     if (!req.user) {
       return res.sendStatus(401);
     }
+
     const userId = req.user.id;
     const conversations = await Conversation.findAll({
       where: {
@@ -69,6 +70,17 @@ router.get("/", async (req, res, next) => {
 
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[0].text;
+      const unreadMessagesUser = convoJSON.messages.filter(
+        (m) => !m.read && m.senderId !== userId
+      );
+      const readMessagesOther = convoJSON.messages.filter(
+        (m) => m.read && m.senderId === userId
+      );
+
+      convoJSON.unreadMessages = unreadMessagesUser.length;
+      convoJSON.lastRead =
+        readMessagesOther.length > 0 ? readMessagesOther[0].id : null;
+
       conversations[i] = convoJSON;
     }
 

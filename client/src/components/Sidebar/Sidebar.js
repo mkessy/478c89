@@ -48,6 +48,8 @@ const Sidebar = (props) => {
 const mapStateToProps = (state) => {
   return {
     conversations: state.conversations,
+    user: state.user,
+    activeConversation: state.activeConversation,
   };
 };
 

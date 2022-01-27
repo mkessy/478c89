@@ -8,19 +8,37 @@ export const addMessageToStore = (state, payload) => {
       messages: [message],
     };
     newConvo.latestMessageText = message.text;
+    newConvo.unreadMessages =
+      newConvo.otherUser.id === message.senderId ? 1 : 0;
     return [newConvo, ...state];
   }
 
   return state.map((convo) => {
+    const isSentByOtherUser = convo.otherUser.id === message.senderId;
     if (convo.id === message.conversationId) {
       return {
         ...convo,
         latestMessageText: message.text,
+        unreadMessages: isSentByOtherUser
+          ? convo.unreadMessages + 1
+          : convo.unreadMessages,
         messages: [...convo.messages, message],
       };
     } else {
       return convo;
     }
+  });
+};
+
+export const clearUnreadMessages = (state, convoId) => {
+  return state.map((convo) => {
+    if (convo.id === convoId) {
+      return {
+        ...convo,
+        unreadMessages: 0,
+      };
+    }
+    return convo;
   });
 };
 
