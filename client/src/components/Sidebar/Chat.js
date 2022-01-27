@@ -42,9 +42,9 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      {conversation.unreadMessages > 0 ? (
+      {conversation.unreadMessages > 0 && (
         <UnreadMessagesCounter unreadCount={conversation.unreadMessages} />
-      ) : null}
+      )}
     </Box>
   );
 };

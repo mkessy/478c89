@@ -14,14 +14,12 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 6,
     placeContent: "center",
     color: "white",
-    // fontFamily: Open Sans, sans-serif,
     fontWeight: "bold",
     lineHeight: 1,
     alignContent: "center",
     borderRadius: 10,
   },
 }));
-//<Badge badgeContent={unreadCount}></Badge>}
 
 const UnreadMessagesCounter = (props) => {
   const classes = useStyles();

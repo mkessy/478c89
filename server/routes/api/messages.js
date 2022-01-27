@@ -5,10 +5,14 @@ const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
 
 // expects {conversationId} in body
-router.post("/update", async (req, res, next) => {
+router.patch("/update", async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
+    }
+
+    if (!req.body.convoId) {
+      return res.message("ConversationId Required").sendStatus(400);
     }
     const userId = req.user.id;
     const { convoId } = req.body;

@@ -116,7 +116,7 @@ export const postMessage = (body) => async (dispatch) => {
 // expects convoId in body
 export const setMessagesAsRead = (convoId) => async (dispatch) => {
   try {
-    await axios.post("/api/messages/update", { convoId });
+    await axios.patch("/api/messages/update", { convoId });
 
     dispatch(clearUnreadMessagesAction(convoId));
   } catch (error) {

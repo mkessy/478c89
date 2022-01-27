@@ -14,9 +14,9 @@ const Messages = (props) => {
         return message.senderId === userId ? (
           <>
             <SenderBubble key={message.id} text={message.text} time={time} />
-            {message.id === lastRead ? (
+            {message.id === lastRead && (
               <OtherUserLastReadBubble otherUser={otherUser} />
-            ) : null}
+            )}
           </>
         ) : (
           <OtherUserBubble
